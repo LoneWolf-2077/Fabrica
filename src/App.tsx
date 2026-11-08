@@ -15,6 +15,7 @@ import { CodePreviewModal } from './components/CodePreviewModal.tsx';
 import { Footer } from './components/Footer.tsx';
 import { TOOLS_DATA, DOWNLOADS_DATA, GUIDES_DATA, ToolItem, DownloadItem, GuideItem } from './data.ts';
 import { getAutoDetectedIllustratorScripts } from './scripts/illustratorLoader.ts';
+import { getAutoDetectedPythonScripts } from './scripts/pythonLoader.ts';
 import { ExternalLink, Sparkles, Wrench, DownloadCloud, BookOpen } from 'lucide-react';
 
 export default function App() {
@@ -45,10 +46,11 @@ export default function App() {
   // Custom uploaded scripts in current session
   const [customScripts, setCustomScripts] = useState<DownloadItem[]>([]);
 
-  // Combined downloads including auto-detected Illustrator scripts from /src/scripts/illustrator/
+  // Combined downloads including auto-detected Illustrator & Python scripts
   const allDownloads = React.useMemo(() => {
-    const autoDetected = getAutoDetectedIllustratorScripts();
-    return [...autoDetected, ...DOWNLOADS_DATA, ...customScripts];
+    const autoIllustrator = getAutoDetectedIllustratorScripts();
+    const autoPython = getAutoDetectedPythonScripts();
+    return [...autoIllustrator, ...autoPython, ...DOWNLOADS_DATA, ...customScripts];
   }, [customScripts]);
 
   // Synchronize theme with HTML document element and localStorage
@@ -154,7 +156,7 @@ export default function App() {
 
           {/* Tagline */}
           <p className="text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl font-light tracking-wide px-4">
-            Production-grade Adobe Illustrator ExtendScripts, W3C design tokens, and web developer utilities engineered by LoneWolf.
+            Production-grade Adobe Illustrator ExtendScripts, Python utilities, W3C design tokens, and web developer tools engineered by LoneWolf.
           </p>
 
           {/* Quick Action Badges */}
@@ -180,7 +182,7 @@ export default function App() {
               }`}
             >
               <DownloadCloud size={13} />
-              <span>Illustrator Scripts</span>
+              <span>Scripts &amp; Automations</span>
             </button>
 
             <button

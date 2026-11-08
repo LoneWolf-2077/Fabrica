@@ -11,6 +11,7 @@ import {
   Sparkles,
   Layers,
   Terminal,
+  Code2,
 } from 'lucide-react';
 import { DownloadItem } from '../data.ts';
 
@@ -32,13 +33,19 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
-  const [showHowToUse, setShowHowToUse] = useState<boolean>(false);
+  const [showAiHowTo, setShowAiHowTo] = useState<boolean>(false);
+  const [showPyHowTo, setShowPyHowTo] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Group Illustrator scripts specifically
   const illustratorScripts = useMemo(() => {
     return downloads.filter((d) => d.category === 'Adobe Illustrator Scripts' || d.filename.endsWith('.jsx'));
+  }, [downloads]);
+
+  // Group Python scripts specifically
+  const pythonScripts = useMemo(() => {
+    return downloads.filter((d) => d.category === 'Python Scripts' || d.filename.endsWith('.py'));
   }, [downloads]);
 
   const categories = useMemo(() => {
@@ -76,6 +83,7 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
       const reader = new FileReader();
       reader.onload = (e) => {
         const content = (e.target?.result as string) || '';
+        const isPython = file.name.endsWith('.py');
         const nameMatch = content.match(/@name\s+([^\r\n]+)/i) || content.match(/@title\s+([^\r\n]+)/i);
         const descMatch = content.match(/@description\s+([^\r\n]+)/i);
         const versionMatch = content.match(/@version\s+([^\r\n]+)/i);
@@ -86,11 +94,13 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
           title: nameMatch ? nameMatch[1].trim() : file.name.replace(/\.[^/.]+$/, ''),
           description: descMatch
             ? descMatch[1].trim()
-            : 'Custom uploaded script detected and verified for Adobe Illustrator.',
-          category: 'Adobe Illustrator Scripts',
+            : isPython
+            ? 'Custom uploaded Python utility script.'
+            : 'Custom uploaded script detected.',
+          category: isPython ? 'Python Scripts' : 'Adobe Illustrator Scripts',
           version: versionMatch ? versionMatch[1].trim() : 'v1.0.0',
           fileSize: `${(file.size / 1024).toFixed(1)} KB`,
-          fileType: file.name.substring(file.name.lastIndexOf('.')) || '.jsx',
+          fileType: file.name.substring(file.name.lastIndexOf('.')) || (isPython ? '.py' : '.jsx'),
           updatedAt: 'Added just now',
           content,
         };
@@ -116,11 +126,9 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
             : 'bg-gradient-to-br from-white via-amber-50/30 to-white border-amber-200 shadow-md'
         }`}
       >
-        {/* Ambient subtle glow */}
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-amber-500/8 blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
-          {/* Section Header */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-slate-200/50 dark:border-white/10">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-[#FF9A00]/15 border border-[#FF9A00]/40 flex items-center justify-center font-display font-black text-[#FF9A00] text-lg shrink-0 shadow-lg shadow-amber-500/10">
@@ -131,7 +139,7 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
                   <span className="font-semibold text-[#FF9A00]">Adobe Illustrator ExtendScripts</span>
                   <span aria-hidden="true">·</span>
                   <span className="tabular-nums font-semibold text-slate-700 dark:text-slate-300">
-                    {illustratorScripts.length} Auto-Detected
+                    {illustratorScripts.length} Auto-Synced from GitHub
                   </span>
                 </div>
                 <h3 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-wide text-slate-900 dark:text-white">
@@ -140,7 +148,6 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
               </div>
             </div>
 
-            {/* Folder Location & Instructions button */}
             <div className="flex flex-wrap items-center gap-2.5">
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-black/60 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-slate-300 shadow-sm">
                 <FolderOpen size={13} className="text-[#FF9A00]" />
@@ -148,50 +155,29 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
               </div>
 
               <button
-                onClick={() => setShowHowToUse((prev) => !prev)}
+                onClick={() => setShowAiHowTo((prev) => !prev)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
               >
                 <Info size={13} />
-                <span>{showHowToUse ? 'Hide Run Guide' : 'How to Run in Illustrator'}</span>
+                <span>{showAiHowTo ? 'Hide Run Guide' : 'How to Run'}</span>
               </button>
             </div>
           </div>
 
-          {/* Quick Instructions Collapse */}
-          {showHowToUse && (
+          {showAiHowTo && (
             <div className="mt-4 p-5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-xs text-slate-700 dark:text-slate-200 space-y-2.5">
               <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                 <Sparkles size={14} className="text-[#FF9A00]" />
                 <span className="font-display uppercase tracking-wider text-sm font-bold">
-                  How to run ExtendScripts (.jsx) in Adobe Illustrator:
+                  Automatic GitHub Sync for Illustrator Scripts:
                 </span>
               </div>
-              <ol className="list-decimal ml-5 space-y-1.5 leading-relaxed font-sans">
-                <li>
-                  <strong className="text-slate-900 dark:text-white">Instant One-Off Run:</strong> In Illustrator, go to{' '}
-                  <code className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-black/60 font-mono text-[11px] text-[#FF9A00]">
-                    File &gt; Scripts &gt; Other Script...
-                  </code>{' '}
-                  (or press <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-black/60 font-mono text-[11px]">Cmd/Ctrl + F12</kbd>) and select your downloaded script.
-                </li>
-                <li>
-                  <strong className="text-slate-900 dark:text-white">Permanent Menu Entry:</strong> Place the downloaded <code className="font-mono text-[#FF9A00]">.jsx</code> file inside your Illustrator Presets folder:{' '}
-                  <code className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-black/60 font-mono text-[11px]">
-                    /Adobe Illustrator [Year]/Presets/[Locale]/Scripts/
-                  </code>. It will appear directly under the File &gt; Scripts menu!
-                </li>
-                <li>
-                  <strong className="text-slate-900 dark:text-white">Add scripts to Fabrica:</strong> Simply place any new ExtendScript inside the repo's{' '}
-                  <code className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-black/60 font-mono text-[11px] text-[#FF9A00]">
-                    src/scripts/illustrator/
-                  </code>{' '}
-                  directory. Fabrica auto-detects and makes it downloadable immediately.
-                </li>
-              </ol>
+              <p className="leading-relaxed">
+                Any `.jsx` or `.js` file you push to <code className="font-mono text-[#FF9A00]">src/scripts/illustrator/</code> in your GitHub repository is automatically detected, compiled, and published live on your GitHub Pages site.
+              </p>
             </div>
           )}
 
-          {/* Grid of Auto-Detected Illustrator Scripts */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             {illustratorScripts.map((script) => {
               const isDownloading = downloadingId === script.id;
@@ -267,51 +253,145 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
               );
             })}
           </div>
+        </div>
+      </section>
 
-          {/* Interactive Drag & Drop Hotspot */}
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragging(true);
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setIsDragging(false);
-              handleFiles(e.dataTransfer.files);
-            }}
-            onClick={() => fileInputRef.current?.click()}
-            className={`mt-6 p-4 rounded-2xl border-2 border-dashed transition-all duration-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left cursor-pointer ${
-              isDragging
-                ? 'border-[#FF9A00] bg-amber-500/10'
-                : 'border-slate-300 dark:border-white/15 hover:border-amber-500/50 hover:bg-slate-50/50 dark:hover:bg-white/5'
-            }`}
-          >
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={(e) => handleFiles(e.target.files)}
-              accept=".jsx,.js,.txt"
-              multiple
-              className="hidden"
-            />
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-amber-500/15 text-[#FF9A00] shrink-0">
-                <Upload size={18} />
+      {/* =========================================================================
+          PYTHON SCRIPTS AUTOMATION HUB (NEW)
+          ========================================================================= */}
+      <section
+        className={`relative overflow-hidden p-6 sm:p-8 rounded-3xl transition-all duration-300 border backdrop-blur-md ${
+          isDark
+            ? 'bg-gradient-to-br from-[#0c1824] via-[#08101a] to-[#05070e] border-cyan-500/25 shadow-2xl shadow-cyan-950/20'
+            : 'bg-gradient-to-br from-white via-cyan-50/30 to-white border-cyan-200 shadow-md'
+        }`}
+      >
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-cyan-500/8 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-5 border-b border-slate-200/50 dark:border-white/10">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center font-display font-black text-cyan-400 text-lg shrink-0 shadow-lg shadow-cyan-500/10">
+                Py
               </div>
               <div>
-                <div className="text-xs font-semibold text-slate-900 dark:text-white">
-                  Drop custom ExtendScripts (.jsx, .js) here to inspect or test
+                <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-500 mb-1">
+                  <span className="font-semibold text-cyan-400">Python 3 Developer Utilities</span>
+                  <span aria-hidden="true">·</span>
+                  <span className="tabular-nums font-semibold text-slate-700 dark:text-slate-300">
+                    {pythonScripts.length} Auto-Synced from GitHub
+                  </span>
                 </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                  Or add permanently into <code className="font-mono text-[#FF9A00]">src/scripts/illustrator/</code> in the repository.
-                </div>
+                <h3 className="font-display text-2xl sm:text-3xl font-black uppercase tracking-wide text-slate-900 dark:text-white">
+                  Python Scripts Automation Hub
+                </h3>
               </div>
             </div>
 
-            <span className="px-3.5 py-1.5 rounded-xl bg-slate-200 dark:bg-white/10 text-xs font-semibold text-slate-700 dark:text-slate-200 shrink-0 border border-slate-300 dark:border-white/10">
-              Browse Files
-            </span>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-black/60 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-slate-300 shadow-sm">
+                <FolderOpen size={13} className="text-cyan-400" />
+                <span className="select-all">src/scripts/python/</span>
+              </div>
+
+              <button
+                onClick={() => setShowPyHowTo((prev) => !prev)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+              >
+                <Info size={13} />
+                <span>{showPyHowTo ? 'Hide Run Guide' : 'How to Run'}</span>
+              </button>
+            </div>
+          </div>
+
+          {showPyHowTo && (
+            <div className="mt-4 p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/25 text-xs text-slate-700 dark:text-slate-200 space-y-2.5">
+              <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                <Sparkles size={14} className="text-cyan-400" />
+                <span className="font-display uppercase tracking-wider text-sm font-bold">
+                  Automatic GitHub Sync for Python Scripts:
+                </span>
+              </div>
+              <p className="leading-relaxed">
+                Any Python script (`.py`) you add to <code className="font-mono text-cyan-400">src/scripts/python/</code> in your GitHub repository will be automatically detected, indexed, and made available for instant preview and download on your GitHub Pages site on your next commit.
+              </p>
+            </div>
+          )}
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {pythonScripts.map((script) => {
+              const isDownloading = downloadingId === script.id;
+              return (
+                <div
+                  key={script.id}
+                  className={`p-5 rounded-2xl border transition-all duration-200 flex flex-col justify-between ${
+                    isDark
+                      ? 'bg-black/40 hover:bg-black/60 border-white/10 hover:border-cyan-500/50 shadow-lg'
+                      : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-cyan-400 shadow-sm'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between text-xs font-mono text-slate-500 mb-2">
+                      <span className="font-semibold text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                        {script.filename}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 font-semibold text-[10px]">
+                          {script.fileType}
+                        </span>
+                        <span className="tabular-nums text-[11px]">{script.fileSize}</span>
+                      </div>
+                    </div>
+
+                    <h4 className="font-display text-lg sm:text-xl font-bold uppercase text-slate-900 dark:text-white">
+                      {script.title}
+                    </h4>
+
+                    <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed font-sans">
+                      {script.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-white/10 flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-mono text-slate-400">
+                      {script.version}
+                    </span>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => onPreviewCode(script)}
+                        className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-xl border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+                      >
+                        <Eye size={12} />
+                        <span>Inspect</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleDownload(script)}
+                        className={`flex items-center gap-1 px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap shadow-sm ${
+                          isDownloading
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 text-white shadow-cyan-500/20'
+                        }`}
+                      >
+                        {isDownloading ? (
+                          <>
+                            <Check size={13} />
+                            <span>Saved!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Download size={13} />
+                            <span>Download .py</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -373,6 +453,7 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
             {filteredDownloads.map((item) => {
               const isDownloading = downloadingId === item.id;
               const isAi = item.category === 'Adobe Illustrator Scripts' || item.filename.endsWith('.jsx');
+              const isPy = item.category === 'Python Scripts' || item.filename.endsWith('.py');
               return (
                 <div
                   key={item.id}
@@ -388,6 +469,8 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
                       className={`p-3 rounded-2xl border shrink-0 ${
                         isAi
                           ? 'bg-amber-500/10 border-amber-500/30 text-[#FF9A00]'
+                          : isPy
+                          ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400'
                           : 'bg-cyan-500/10 dark:bg-cyan-500/10 border-cyan-500/30 text-cyan-600 dark:text-cyan-400'
                       }`}
                     >
@@ -399,7 +482,7 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
                       <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mb-1.5 font-mono">
                         <span className="font-semibold text-slate-900 dark:text-slate-200">{item.filename}</span>
                         <span aria-hidden="true">·</span>
-                        <span className={isAi ? 'text-[#FF9A00] font-medium' : 'text-cyan-600 dark:text-cyan-400 font-medium'}>
+                        <span className={isAi ? 'text-[#FF9A00] font-medium' : isPy ? 'text-cyan-400 font-medium' : 'text-cyan-600 dark:text-cyan-400 font-medium'}>
                           {item.category}
                         </span>
                         <span aria-hidden="true">·</span>
@@ -437,6 +520,8 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
                           ? 'bg-emerald-600 text-white'
                           : isAi
                           ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:brightness-110 text-slate-950'
+                          : isPy
+                          ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 text-white shadow-cyan-500/20'
                           : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:brightness-110 text-white shadow-cyan-500/20'
                       }`}
                     >
