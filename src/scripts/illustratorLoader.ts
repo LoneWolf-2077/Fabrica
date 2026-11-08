@@ -5,7 +5,7 @@ import { DownloadItem } from '../data.ts';
  * Using Vite's eager glob import with raw string query.
  */
 const scriptModules = import.meta.glob<string>(
-  './illustrator/*.{jsx,js,txt}',
+  './illustrator/*',
   { query: '?raw', import: 'default', eager: true }
 );
 
