@@ -1,0 +1,6 @@
+{
+  "name": "Fabrica — Developer & Designer Portal",
+  "description": "A clean, minimal, non-intimidating developer and designer portal featuring open-source scripts, design assets, and web utilities by Lonewolf.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
