@@ -1,11 +1,11 @@
 import { DownloadItem } from '../data.ts';
 
 /**
- * Auto-detect all Python scripts dropped into the /src/scripts/python/ folder
- * Using Vite's eager glob import with raw string query.
+ * Auto-detect all Python scripts dropped into subfolders (Python Packs) under /src/scripts/python/
+ * Using Vite's eager recursive glob import with raw string query.
  */
 const scriptModules = import.meta.glob<string>(
-  './python/*',
+  './python/**/*',
   { query: '?raw', import: 'default', eager: true }
 );
 
@@ -59,10 +59,19 @@ export function getAutoDetectedPythonScripts(): DownloadItem[] {
   const detected: DownloadItem[] = [];
 
   for (const [path, rawContent] of Object.entries(scriptModules)) {
-    const filename = path.split('/').pop() || 'script.py';
+    const parts = path.split('/');
+    const filename = parts.pop() || 'script.py';
     
-    if (filename.toLowerCase().startsWith('readme') || filename.startsWith('.')) {
+    if (filename.toLowerCase().startsWith('readme') || filename.startsWith('.') || !filename.includes('.')) {
       continue;
+    }
+
+    let packName = 'Python Scripts';
+    if (parts.length > 2) {
+      const subfolder = parts.slice(2).join(' / ');
+      if (subfolder) {
+        packName = subfolder;
+      }
     }
 
     const content = typeof rawContent === 'string' ? rawContent : '';
@@ -77,7 +86,7 @@ export function getAutoDetectedPythonScripts(): DownloadItem[] {
       description:
         meta.description ||
         `Zero-dependency Python 3 utility script for developer workflows.`,
-      category: 'Python Scripts',
+      category: packName,
       version: meta.version ? (meta.version.startsWith('v') ? meta.version : `v${meta.version}`) : 'v1.0.0',
       fileSize: formatBytes(size),
       fileType: ext || '.py',

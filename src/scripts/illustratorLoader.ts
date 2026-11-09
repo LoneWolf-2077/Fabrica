@@ -1,11 +1,11 @@
 import { DownloadItem } from '../data.ts';
 
 /**
- * Auto-detect all Illustrator scripts dropped into the /src/scripts/illustrator/ folder
- * Using Vite's eager glob import with raw string query.
+ * Auto-detect all Illustrator scripts dropped into subfolders (Script Packs) under /src/scripts/illustrator/
+ * Using Vite's eager recursive glob import with raw string query.
  */
 const scriptModules = import.meta.glob<string>(
-  './illustrator/*',
+  './illustrator/**/*',
   { query: '?raw', import: 'default', eager: true }
 );
 
@@ -23,7 +23,6 @@ function parseScriptMetadata(content: string, filename: string): ParsedMetadata 
   if (nameMatch) {
     meta.name = nameMatch[1].trim();
   } else {
-    // Check if the first comment line looks like a title (e.g., "RANGE-BASED ARTBOARD RENAMER")
     const bannerMatch = content.match(/\/\*+\s*[\r\n]+\s*([A-Za-z0-9\-_\s\(\)]+)/);
     if (bannerMatch && bannerMatch[1] && bannerMatch[1].trim().length > 3 && bannerMatch[1].trim().length < 60) {
       meta.name = bannerMatch[1].trim();
@@ -34,10 +33,9 @@ function parseScriptMetadata(content: string, filename: string): ParsedMetadata 
   if (descMatch) {
     meta.description = descMatch[1].trim();
   } else {
-    // Check for "Part of..." or summary line
     const partOfMatch = content.match(/Part of[^\r\n]+/i);
     if (partOfMatch) {
-      meta.description = `${partOfMatch[0].trim()}. Renames artboards with custom prefix/suffix and sequential ranges.`;
+      meta.description = `${partOfMatch[0].trim()}. Adobe Illustrator ExtendScript automation workflow.`;
     }
   }
 
@@ -66,12 +64,23 @@ export function getAutoDetectedIllustratorScripts(): DownloadItem[] {
   const detected: DownloadItem[] = [];
 
   for (const [path, rawContent] of Object.entries(scriptModules)) {
-    // Extract filename from path (e.g., "./illustrator/batch-artboard-exporter.jsx")
-    const filename = path.split('/').pop() || 'script.jsx';
+    // path format: "./illustrator/Artboard Tools/batch-artboard-rename.jsx"
+    const parts = path.split('/');
+    const filename = parts.pop() || 'script.jsx';
     
-    // Skip non-scripts like README or hidden files if any match
-    if (filename.toLowerCase().startsWith('readme') || filename.startsWith('.')) {
+    // Skip non-scripts like README, directories, or hidden files
+    if (filename.toLowerCase().startsWith('readme') || filename.startsWith('.') || !filename.includes('.')) {
       continue;
+    }
+
+    // Determine Script Pack category from subfolder if present
+    // parts will be [., illustrator, Artboard Tools]
+    let packName = 'Adobe Illustrator Scripts';
+    if (parts.length > 2) {
+      const subfolder = parts.slice(2).join(' / ');
+      if (subfolder) {
+        packName = `AI Pack: ${subfolder}`;
+      }
     }
 
     const content = typeof rawContent === 'string' ? rawContent : '';
@@ -86,7 +95,7 @@ export function getAutoDetectedIllustratorScripts(): DownloadItem[] {
       description:
         meta.description ||
         `Automated Adobe Illustrator ExtendScript for vector manipulation and artboard workflows.`,
-      category: 'Adobe Illustrator Scripts',
+      category: packName,
       version: meta.version ? (meta.version.startsWith('v') ? meta.version : `v${meta.version}`) : 'v1.0.0',
       fileSize: formatBytes(size),
       fileType: ext || '.jsx',
