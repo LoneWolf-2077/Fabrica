@@ -1,3 +1,9 @@
+/**
+ * @name Drill Holes
+ * @description automatically generates holes for CNC to drill
+ * @version 1.0.0
+ * @author LoneWolf
+ */
 #target illustrator
 
 (function createBatchDrillDotsAllAround() {
