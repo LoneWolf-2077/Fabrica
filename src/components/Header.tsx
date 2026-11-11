@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sun, Moon, Sparkles, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sun, Moon, Sparkles, ExternalLink, Menu, X, Wrench, DownloadCloud, BookOpen } from 'lucide-react';
 
 export type ActiveTab = 'tools' | 'downloads' | 'guides';
 
@@ -24,14 +24,21 @@ export const Header: React.FC<HeaderProps> = ({
   onReplayIntro,
   counts,
 }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleTabSelect = (tab: ActiveTab) => {
+    onTabChange(tab);
+    setMobileMenuOpen(false);
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full transition-colors border-b backdrop-blur-md bg-white/80 dark:bg-[#05070e]/85 border-slate-200/80 dark:border-white/10 shadow-sm dark:shadow-2xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 sm:gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         {/* Zone 1: Brand Wordmark in LoneWolf Style */}
         <div className="flex items-center gap-3 shrink-0">
           <button
-            onClick={() => onTabChange('tools')}
+            onClick={() => handleTabSelect('tools')}
             className="group flex items-center gap-2.5 text-left cursor-pointer"
           >
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-pink-500 via-purple-600 to-cyan-400 p-[1.5px] shadow-sm shadow-pink-500/20 group-hover:shadow-[0_0_15px_rgba(255,42,133,0.5)] transition-all">
@@ -55,17 +62,17 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        {/* Zone 2: Navigation Tabs */}
+        {/* Zone 2: Desktop Navigation Tabs */}
         <nav
-          className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-black/50 border border-slate-200/80 dark:border-white/10 backdrop-blur-md"
+          className="hidden md:flex items-center p-1 rounded-xl bg-slate-100 dark:bg-black/50 border border-slate-200/80 dark:border-white/10 backdrop-blur-md"
           role="tablist"
           aria-label="Fabrica Navigation"
         >
           <button
             role="tab"
             aria-selected={activeTab === 'tools'}
-            onClick={() => onTabChange('tools')}
-            className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+            onClick={() => handleTabSelect('tools')}
+            className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
               activeTab === 'tools'
                 ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-sm border border-slate-200/80 dark:border-white/15 dark:shadow-pink-500/20'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 border border-transparent'
@@ -78,8 +85,8 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             role="tab"
             aria-selected={activeTab === 'downloads'}
-            onClick={() => onTabChange('downloads')}
-            className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+            onClick={() => handleTabSelect('downloads')}
+            className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
               activeTab === 'downloads'
                 ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-sm border border-slate-200/80 dark:border-white/15 dark:shadow-pink-500/20'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 border border-transparent'
@@ -92,8 +99,8 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             role="tab"
             aria-selected={activeTab === 'guides'}
-            onClick={() => onTabChange('guides')}
-            className={`px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+            onClick={() => handleTabSelect('guides')}
+            className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
               activeTab === 'guides'
                 ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-sm border border-slate-200/80 dark:border-white/15 dark:shadow-pink-500/20'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 border border-transparent'
@@ -104,8 +111,8 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
 
-        {/* Zone 3: LoneWolf Main App link, Intro Replay & Theme Toggle */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Zone 3: Controls (Theme Toggle, Main App, Burger Button) */}
+        <div className="flex items-center gap-2 shrink-0">
           <a
             href="https://lonewolf-2077.github.io/App/"
             target="_blank"
@@ -139,9 +146,101 @@ export const Header: React.FC<HeaderProps> = ({
               <Moon size={17} className="text-purple-600 transition-transform hover:-rotate-12" />
             )}
           </button>
+
+          {/* Mobile Burger Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            className="md:hidden flex items-center justify-center p-2 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-100/80 dark:bg-black/60 text-slate-700 dark:text-slate-200 hover:text-pink-500 transition-all cursor-pointer shadow-sm"
+            aria-label="Toggle Mobile Menu"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
 
       </div>
+
+      {/* Mobile Dropdown Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[#0a0e1c]/95 backdrop-blur-xl px-4 py-5 space-y-3 shadow-2xl">
+          <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider px-1">
+            Navigation Menu
+          </div>
+
+          <button
+            onClick={() => handleTabSelect('tools')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+              activeTab === 'tools'
+                ? 'bg-pink-500/15 text-pink-500 border border-pink-500/30'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Wrench size={16} />
+              <span>Tools &amp; Sandboxes</span>
+            </div>
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-black/10 dark:bg-white/10">
+              {counts.tools}
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleTabSelect('downloads')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+              activeTab === 'downloads'
+                ? 'bg-amber-500/15 text-[#FF9A00] border border-amber-500/30'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <DownloadCloud size={16} />
+              <span>Script Packs &amp; Downloads</span>
+            </div>
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-black/10 dark:bg-white/10">
+              {counts.downloads}
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleTabSelect('guides')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+              activeTab === 'guides'
+                ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <BookOpen size={16} />
+              <span>Technical Guides</span>
+            </div>
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-black/10 dark:bg-white/10">
+              {counts.guides}
+            </span>
+          </button>
+
+          <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex flex-col gap-2">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onReplayIntro();
+              }}
+              className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10"
+            >
+              <Sparkles size={14} className="text-pink-500" />
+              <span>Replay Intro Splash</span>
+            </button>
+
+            <a
+              href="https://lonewolf-2077.github.io/App/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-pink-500/10 to-purple-500/10 text-pink-600 dark:text-pink-400 border border-pink-500/30"
+            >
+              <span>Visit LoneWolf Studio App</span>
+              <ExternalLink size={14} />
+            </a>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
