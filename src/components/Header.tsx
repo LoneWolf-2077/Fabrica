@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({
                   FABRICA
                 </span>
                 <span className="text-[10px] font-display uppercase tracking-widest px-1.5 py-0.5 rounded bg-pink-500/10 text-pink-500 dark:text-pink-400 border border-pink-500/20 font-bold">
-                  v2
+                  v1.0
                 </span>
               </div>
               <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-tight">
