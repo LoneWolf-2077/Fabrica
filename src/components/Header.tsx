@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Sun, Moon, Sparkles, ExternalLink, Menu, X, Wrench, DownloadCloud, BookOpen } from 'lucide-react';
+import { Sun, Moon, Sparkles, ExternalLink, Menu, X, Wrench, DownloadCloud, BookOpen, Youtube } from 'lucide-react';
 
-export type ActiveTab = 'tools' | 'downloads' | 'guides';
+export type ActiveTab = 'tools' | 'downloads' | 'guides' | 'channels';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -13,6 +13,7 @@ interface HeaderProps {
     tools: number;
     downloads: number;
     guides: number;
+    channels: number;
   };
 }
 
@@ -108,6 +109,20 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <span>Guides</span>
             <span className="text-[11px] font-mono opacity-60">({counts.guides})</span>
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={activeTab === 'channels'}
+            onClick={() => handleTabSelect('channels')}
+            className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+              activeTab === 'channels'
+                ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-sm border border-slate-200/80 dark:border-white/15 dark:shadow-red-500/20'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 border border-transparent'
+            }`}
+          >
+            <span>Channels</span>
+            <span className="text-[11px] font-mono opacity-60">({counts.channels})</span>
           </button>
         </nav>
 
@@ -214,6 +229,23 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-black/10 dark:bg-white/10">
               {counts.guides}
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleTabSelect('channels')}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+              activeTab === 'channels'
+                ? 'bg-red-500/15 text-red-500 border border-red-500/30'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Youtube size={16} />
+              <span>YouTube Channels</span>
+            </div>
+            <span className="text-xs font-mono px-2 py-0.5 rounded bg-black/10 dark:bg-white/10">
+              {counts.channels}
             </span>
           </button>
 

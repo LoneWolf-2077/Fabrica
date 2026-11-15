@@ -9,14 +9,15 @@ import { Header, ActiveTab } from './components/Header.tsx';
 import { ToolsTab } from './components/ToolsTab.tsx';
 import { DownloadsTab } from './components/DownloadsTab.tsx';
 import { GuidesTab } from './components/GuidesTab.tsx';
+import { ChannelsTab } from './components/ChannelsTab.tsx';
 import { ToolModal } from './components/ToolModal.tsx';
 import { GuideReaderModal } from './components/GuideReaderModal.tsx';
 import { CodePreviewModal } from './components/CodePreviewModal.tsx';
 import { Footer } from './components/Footer.tsx';
-import { TOOLS_DATA, DOWNLOADS_DATA, GUIDES_DATA, ToolItem, DownloadItem, GuideItem } from './data.ts';
+import { TOOLS_DATA, DOWNLOADS_DATA, GUIDES_DATA, CHANNELS_DATA, ToolItem, DownloadItem, GuideItem } from './data.ts';
 import { getAutoDetectedIllustratorScripts } from './scripts/illustratorLoader.ts';
 import { getAutoDetectedPythonScripts } from './scripts/pythonLoader.ts';
-import { ExternalLink, Sparkles, Wrench, DownloadCloud, BookOpen } from 'lucide-react';
+import { ExternalLink, Sparkles, Wrench, DownloadCloud, BookOpen, Youtube } from 'lucide-react';
 
 export default function App() {
   // Theme state: default dark mode with safe storage access
@@ -131,6 +132,7 @@ export default function App() {
             tools: TOOLS_DATA.length,
             downloads: allDownloads.length,
             guides: GUIDES_DATA.length,
+            channels: CHANNELS_DATA.length,
           }}
         />
       </div>
@@ -170,7 +172,7 @@ export default function App() {
               }`}
             >
               <Wrench size={13} />
-              <span>Explore Utilities</span>
+              <span>Resources</span>
             </button>
 
             <button
@@ -195,6 +197,18 @@ export default function App() {
             >
               <BookOpen size={13} />
               <span>Standards &amp; Guides</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('channels')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === 'channels'
+                  ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg shadow-red-600/25'
+                  : 'bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-white dark:hover:bg-white/10'
+              }`}
+            >
+              <Youtube size={13} />
+              <span>YouTube Channels</span>
             </button>
 
             <a
@@ -234,6 +248,13 @@ export default function App() {
             <GuidesTab
               guides={GUIDES_DATA}
               onOpenGuide={(guide) => setSelectedGuide(guide)}
+              isDark={isDark}
+            />
+          )}
+
+          {activeTab === 'channels' && (
+            <ChannelsTab
+              channels={CHANNELS_DATA}
               isDark={isDark}
             />
           )}

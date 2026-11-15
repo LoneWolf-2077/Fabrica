@@ -35,6 +35,59 @@ export interface GuideItem {
   markdownContent: string;
 }
 
+export interface ChannelItem {
+  id: string;
+  name: string;
+  handle: string;
+  url: string;
+  description: string;
+  category: string;
+  badge?: string;
+  avatarUrl?: string;
+}
+
+export const CHANNELS_DATA: ChannelItem[] = [
+  {
+    id: 'cj-cawley',
+    name: 'CJ Cawley Design',
+    handle: '@cjcawleydesign',
+    url: 'https://www.youtube.com/@cjcawleydesign',
+    description: 'Expert graphic design tutorials, Adobe Illustrator workflows, brand identity design, and professional portfolio advice.',
+    category: 'Illustrator & Branding',
+    badge: 'Design Pro',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'abi-connick',
+    name: 'Abi Connick',
+    handle: '@abiconnick',
+    url: 'https://www.youtube.com/@abiconnick',
+    description: 'Creative design insights, digital art tutorials, workspace setup tours, and illustrator efficiency tips.',
+    category: 'Digital Art',
+    badge: 'Creator',
+  },
+  {
+    id: 'satori-graphics',
+    name: 'Satori Graphics',
+    handle: '@SatoriGraphics',
+    url: 'https://www.youtube.com/@SatoriGraphics',
+    description: 'The best graphic design channel for Adobe Illustrator, Photoshop, typography rules, composition, and visual design theory.',
+    category: 'Design Theory',
+    badge: 'Popular',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'the-futur',
+    name: 'The Futur',
+    handle: '@thefutur',
+    url: 'https://www.youtube.com/@thefutur',
+    description: 'Education platform teaching you how to make a living doing what you love with masterclasses in branding, pricing, and design.',
+    category: 'Business & Design',
+    badge: 'Essential',
+    avatarUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80',
+  },
+];
+
 export const TOOLS_DATA: ToolItem[] = [
   {
     id: 'svg-minifier',
@@ -55,6 +108,16 @@ export const TOOLS_DATA: ToolItem[] = [
     tags: ['Adobe Color', 'WCAG', 'Design Tokens', 'Color'],
     url: 'https://color.adobe.com/create/color-contrast-analyzer',
     badge: 'Essential',
+    featured: true,
+  },
+  {
+    id: 'coolors',
+    title: 'Coolors',
+    summary: 'The super fast color palettes generator! Create, save, and share perfect palettes, explore trending color combinations, and check contrast.',
+    category: 'Color',
+    tags: ['Coolors', 'Palette Generator', 'Color Schemes', 'Design'],
+    url: 'https://coolors.co/?home',
+    badge: 'Popular',
     featured: true,
   },
   {
@@ -157,6 +220,76 @@ export const TOOLS_DATA: ToolItem[] = [
     url: 'https://www.photopea.com/',
     badge: 'Advanced Editor',
     featured: true,
+  },
+  {
+    id: 'pexels',
+    title: 'Pexels',
+    summary: 'Free stock photos and videos shared by talented creators. High-resolution visuals for websites, mockups, and creative projects.',
+    category: 'Stock Assets',
+    tags: ['Pexels', 'Stock Photos', 'Free Videos', 'Stock Assets'],
+    url: 'https://www.pexels.com/',
+    badge: 'Free Stock',
+    featured: true,
+  },
+  {
+    id: 'unsplash',
+    title: 'Unsplash',
+    summary: 'The internet’s source for freely-usable images. Powered by creators everywhere with millions of stunning high-res photos.',
+    category: 'Stock Assets',
+    tags: ['Unsplash', 'Stock Photography', 'Free Images', 'High-Res'],
+    url: 'https://unsplash.com/',
+    badge: 'High-Res Photos',
+    featured: true,
+  },
+  {
+    id: 'pixabay',
+    title: 'Pixabay',
+    summary: 'Vibrant community of creatives sharing copyright-free images, illustrations, vector graphics, video footage, and audio tracks.',
+    category: 'Stock Assets',
+    tags: ['Pixabay', 'Stock Photos', 'Vectors', 'Audio', 'Free Media'],
+    url: 'https://pixabay.com/',
+    badge: 'Media Library',
+    featured: false,
+  },
+  {
+    id: 'magnific',
+    title: 'Magnific AI',
+    summary: 'State-of-the-art AI upscaler and enhancer that allows you to upscale, enhance, and reimagine images with unprecedented detail.',
+    category: 'Stock Assets',
+    tags: ['Magnific', 'AI Upscaler', 'Super-Resolution', 'Image Enhancement'],
+    url: 'https://www.magnific.com/',
+    badge: 'AI Upscaling',
+    featured: true,
+  },
+  {
+    id: 'clean-png',
+    title: 'CleanPNG',
+    summary: 'Millions of transparent PNG images, vector graphics, and silhouettes with zero background. Free for personal and commercial projects.',
+    category: 'PNG',
+    tags: ['CleanPNG', 'Transparent', 'Cutouts', 'Vector Art'],
+    url: 'https://www.cleanpng.com/',
+    badge: 'Transparent PNG',
+    featured: true,
+  },
+  {
+    id: 'png-wing',
+    title: 'PngWing',
+    summary: 'Vast repository of transparent PNG sticker cutouts, game renders, icons, and high-definition graphical elements.',
+    category: 'PNG',
+    tags: ['PngWing', 'Transparent Images', 'Clipart', 'Graphics'],
+    url: 'https://www.pngwing.com/',
+    badge: 'PNG Library',
+    featured: true,
+  },
+  {
+    id: 'png-egg',
+    title: 'PngEgg',
+    summary: 'Free transparent background images and PNG assets sorted by popular design categories, cars, tech, and characters.',
+    category: 'PNG',
+    tags: ['PngEgg', 'Transparent PNG', 'Stickers', 'Render Images'],
+    url: 'https://www.pngegg.com/',
+    badge: 'Free PNGs',
+    featured: false,
   },
   {
     id: 'json-to-ts',
