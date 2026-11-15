@@ -292,6 +292,16 @@ export const TOOLS_DATA: ToolItem[] = [
     featured: false,
   },
   {
+    id: 'google-ai-studio',
+    title: 'Google AI Studio',
+    summary: 'Prototyping environment for developers to experiment with Gemini models, prompt engineering, multimodal generation, and API keys.',
+    category: 'Developer Utilities',
+    tags: ['AI Studio', 'Gemini', 'Prototyping', 'LLM'],
+    url: 'https://aistudio.google.com/',
+    badge: 'AI Platform',
+    featured: true,
+  },
+  {
     id: 'json-to-ts',
     title: 'JSON to TypeScript Interface Synthesizer',
     summary: 'Instant deterministic conversion of nested JSON payloads into strictly-typed TypeScript interfaces, types, and readonly records.',

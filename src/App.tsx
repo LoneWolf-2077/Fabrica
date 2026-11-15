@@ -223,7 +223,7 @@ export default function App() {
         </section>
 
         {/* Dynamic Content Hub (Tab SPA) */}
-        <div className="hidden transition-opacity duration-200">
+        <div className="transition-opacity duration-200">
           {activeTab === 'tools' && (
             <ToolsTab
               tools={TOOLS_DATA}
