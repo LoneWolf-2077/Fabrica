@@ -188,14 +188,14 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-black/60 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-slate-300 shadow-sm">
+              <div className="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/80 dark:bg-black/60 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-700 dark:text-slate-300 shadow-sm">
                 <FolderOpen size={13} className="text-pink-500" />
                 <span className="select-all">src/scripts/ [illustrator / python]</span>
               </div>
 
               <button
                 onClick={() => setShowHowTo((prev) => !prev)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
+                className="hidden items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer"
               >
                 <Info size={13} />
                 <span>{showHowTo ? 'Hide GitHub Sync Info' : 'GitHub Auto-Sync Info'}</span>
@@ -277,7 +277,7 @@ export const DownloadsTab: React.FC<DownloadsTabProps> = ({
               handleFiles(e.dataTransfer.files);
             }}
             onClick={() => fileInputRef.current?.click()}
-            className={`mt-6 p-4 rounded-2xl border-2 border-dashed transition-all duration-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left cursor-pointer ${
+            className={`hidden mt-6 p-4 rounded-2xl border-2 border-dashed transition-all duration-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left cursor-pointer ${
               isDragging
                 ? 'border-pink-500 bg-pink-500/10'
                 : 'border-slate-300 dark:border-white/15 hover:border-pink-500/50 hover:bg-slate-50/50 dark:hover:bg-white/5'

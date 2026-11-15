@@ -39,7 +39,7 @@ export const ToolsTab: React.FC<ToolsTabProps> = ({ tools, onOpenSandbox, isDark
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2 h-2 rounded-full bg-pink-500" />
             <h2 className="font-display text-2xl sm:text-3xl font-extrabold uppercase tracking-wide text-slate-900 dark:text-white">
-              Curated Utilities &amp; Sandboxes
+              Free Online Resources
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">

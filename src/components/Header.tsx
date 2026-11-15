@@ -78,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/5 border border-transparent'
             }`}
           >
-            <span>Tools</span>
+            <span>Resources</span>
             <span className="text-[11px] font-mono opacity-60">({counts.tools})</span>
           </button>
 
@@ -176,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <div className="flex items-center gap-2.5">
               <Wrench size={16} />
-              <span>Tools &amp; Sandboxes</span>
+              <span>Resources Hub</span>
             </div>
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-black/10 dark:bg-white/10">
               {counts.tools}
