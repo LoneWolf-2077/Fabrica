@@ -51,20 +51,7 @@ export const ChannelsTab: React.FC<ChannelsTabProps> = ({ channels, isDark }) =>
         </div>
       </div>
 
-      {/* Info Notice for Adding Channels */}
-      <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/25 flex items-start gap-3.5">
-        <div className="p-2 rounded-xl bg-red-500/20 text-red-500 shrink-0 mt-0.5">
-          <Youtube size={18} />
-        </div>
-        <div className="text-xs text-slate-700 dark:text-slate-200 space-y-1">
-          <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
-            <span className="font-display uppercase tracking-wider text-sm font-bold">Easy Centralized Updates:</span>
-          </div>
-          <p className="leading-relaxed">
-            You can add, edit, or remove channels anytime by updating the <code className="font-mono text-red-400">CHANNELS_DATA</code> array in <code className="font-mono text-red-400">src/data.ts</code>. Changes will automatically sync to your GitHub Pages site!
-          </p>
-        </div>
-      </div>
+
 
       {/* Channels Grid */}
       {filteredChannels.length > 0 ? (
